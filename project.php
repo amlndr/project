@@ -2,9 +2,11 @@
 
 <html>
 
+
 <?php
     include_once("connection.php");
 
+   
     if (isset($_POST['add'])){
         $am = $_POST['ammount'];
 
@@ -12,6 +14,17 @@
 
         if (mysqli_query($c,$add)){
             echo "successfully added";
+        } else echo "fail";
+    }
+
+    if (isset($_POST['update'])){
+        $amm = $_POST['ammount'];
+        $id = $_POST['id'];
+
+        $newDt = "update packs set ammount='$amm' where id = $id; ";
+
+        if (mysqli_query($c,$newDt)){
+            echo "successfully updated";
         }else echo "fail";
     }
 
@@ -24,18 +37,7 @@
             echo "successfully deleted";
         }else echo "fail";
     }
-
-    if (isset($_GET['edit'])){
-        $id =$_GET['edit'];
-        $result = $mysqli->query ("select * from packs where id=$id;") or die($mysqli->error());
-
-        if(count($result)==1){
-            $row =$result->fetch_array();
-            $ammount=$row['ammount'];
-        }
-    } 
-
-    $ammount='';
+   
 ?>
 
 <head>
@@ -62,14 +64,45 @@
             <h1 style="font-size: 20px">add new widget packs here</h1>
         </div>
         <div class="input">
-            <form method="POST">
-                <input type="text" id="ammount" value="<?php echo $ammount ?>" name="ammount" placeholder="type in new ammount">
-                <button style="border-radius:20px;padding:5px 16px;"type = "submit" name="add">add new</button>
+            <form >
+                <input type="text" id="ammount" name="ammount" placeholder="type in new ammount">
+                <button style="border-radius:20px;padding:5px 16px;" type = "submit" name="add">add new</button>
             </form>
         </div>
     </div>
     </div>
+
     
+<?php
+    if (isset($_GET['edit'])){
+        $id      = $_GET['edit'];
+        $edit    = "select * from packs where id=$id;";
+        $result  = mysqli_query($c,$edit);
+        $rsCheck = mysqli_num_rows($result);
+                   
+        if($rsCheck==1){
+            $row = mysqli_fetch_assoc($result);
+            $ammount=$row['ammount'];
+            ?>
+
+            <div class="container">
+                <div class="title">
+                    <h1 style="font-size: 20px">update new widget packs here</h1>
+                </div>
+                <div class="input">
+                     <form >
+                        <input type="text" id="ammount" value="<?php echo $ammount; ?>" name="ammount" placeholder="type in new ammount">
+                        <button style="border-radius:20px;padding:5px 16px;"type = "submit" name="update">update</button>
+                    </form>
+                </div>
+            </div>
+                   <?php }
+                } 
+            ?>
+            </div>
+    
+    
+  
     <div class="orderPacks">
         <h2>your widget packs</h2>
         <table style="margin:2px;">
@@ -93,7 +126,7 @@
             <td>
             
                 
-                <a href="project.php?update=<?php echo $rows['id'];?>" type="submit" style="border-radius:20px;padding:5px 16px;" name="edit">edit</a>
+                <a href="project.php?edit=<?php echo $rows['id'];?>" type="submit" style="border-radius:20px;padding:5px 16px;" name="edit">edit</a>
             
                 <a href="project.php?delete=<?php echo $rows['id']; ?>" type="submit"  name="delete">delete </a>
             </td></tr>
@@ -104,7 +137,12 @@
     </table>
     </div>
 
+
+  
+
+  
     <div class="devider"></div>
+
 
     <div class="orderPacks">
         <h2>orders</h2>
