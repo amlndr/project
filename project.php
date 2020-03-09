@@ -3,12 +3,39 @@
 <html>
 
 <?php
-    $dbhost = 'localhost';
-    $username = 'root';
-    $password = '';
-    $db = 'project';
+    include_once("connection.php");
 
-    $c =  mysqli_connect($dbhost, $username, $password, $db) or die ("connection fail!");
+    if (isset($_POST['add'])){
+        $am = $_POST['ammount'];
+
+        $add = "insert into packs(ammount) values ('$am');";
+
+        if (mysqli_query($c,$add)){
+            echo "successfully added";
+        }else echo "fail";
+    }
+
+    if (isset($_GET['delete'])){
+        $id = $_GET['delete'];
+
+        $del ="delete from packs where id =$id;";
+
+        if (mysqli_query($c,$del)){
+            echo "successfully deleted";
+        }else echo "fail";
+    }
+
+    if (isset($_GET['edit'])){
+        $id =$_GET['edit'];
+        $result = $mysqli->query ("select * from packs where id=$id;") or die($mysqli->error());
+
+        if(count($result)==1){
+            $row =$result->fetch_array();
+            $ammount=$row['ammount'];
+        }
+    } 
+
+    $ammount='';
 ?>
 
 <head>
@@ -27,37 +54,28 @@
     <nav>
          <img src="wally.png" height="70" width="70" >
          <h5 style= "color:indigo">Wally's Widget</h5>
+
     </nav>
 
-    <div class="add">
-        <div class="title">
+    <div class="container">
+    <div class="title">
             <h1 style="font-size: 20px">add new widget packs here</h1>
         </div>
         <div class="input">
-            <form method="post">
-                <input type="number" id="ammount" name="ammount" placeholder="type in new ammount">
-                <button style="border-radius:20px;padding:5px 16px;"type = "submit" name="submit">add new</button>
+            <form method="POST">
+                <input type="text" id="ammount" value="<?php echo $ammount ?>" name="ammount" placeholder="type in new ammount">
+                <button style="border-radius:20px;padding:5px 16px;"type = "submit" name="add">add new</button>
             </form>
         </div>
-        <?php 
-            $am = $_POST["ammount"];
-
-            $add = "insert into packs(ammount) values ('$am');";
-
-            if (mysqli_query($c,$add)){
-                echo "successfully added";
-            }else echo "fail";
-        ?>
     </div>
-
+    </div>
+    
     <div class="orderPacks">
-        <h2 style="text-align:center; color:blueviolet">update widget packs</h2>
-        <table>
+        <h2>your widget packs</h2>
+        <table style="margin:2px;">
         <tr>
             <th>Packs</th>
-            <th>edit</th>
-            <th>update</th>
-            <th>delete</th>
+            <th>Action</th>
         </tr>
         
         <?php
@@ -68,19 +86,17 @@
             if($resultCheck>0){
 
             while($rows = mysqli_fetch_assoc($result)){
+                $amt = $rows['ammount'];
         ?>
             <tr>
-                <td><?php echo $rows['ammount'];?></td>
-                <td>
-                <form>
-                    <input type="number" id="ammount" name="ammount" placeholder="type in new ammount">
-                </td>
+                <td><?php echo $amt;?></td>
             <td>
-                <button type="submit"style="border-radius:20px;padding:5px 16px;">update</button>
-            </td>
-            <td>
-                <button type="submit"style="border-radius:20px;padding:5px 16px;">delete</button>
-            </tr>
+            
+                
+                <a href="project.php?update=<?php echo $rows['id'];?>" type="submit" style="border-radius:20px;padding:5px 16px;" name="edit">edit</a>
+            
+                <a href="project.php?delete=<?php echo $rows['id']; ?>" type="submit"  name="delete">delete </a>
+            </td></tr>
             <?php
                 }
                 }
@@ -91,7 +107,7 @@
     <div class="devider"></div>
 
     <div class="orderPacks">
-        <h2 style="text-align:center; color:blueviolet">orders</h2>
+        <h2>orders</h2>
         <table>
         <tr>
             <th>name</th>
@@ -126,3 +142,5 @@
 
  
 </body>
+
+</html>
