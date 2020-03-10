@@ -34,19 +34,18 @@
 
     //comparing
     echo "result: ";
-    function a($oAr,$pAr){
+     function a($oAr,$pAr){
         foreach($oAr as $o){
             foreach($pAr as $p){
                 if ($o['orderAmmount'] === $p['ammount'])
-        {  //solusi lain?
-            echo "true\n";
-        }else echo "false\n";
+                    {  //solusi lain?
+                        echo $o['name'];
+                    }else echo "false\n";
             }
         }
     }
 
     a($oAr,$pAr);
-       
     
         
    
