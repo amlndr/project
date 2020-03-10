@@ -15,42 +15,76 @@
     $pAr = array();
     if (mysqli_num_rows($rsPacks) >0){
         while($row = mysqli_fetch_assoc($rsPacks)){
-            $pAr[] = $row;}
+            $pAr[] = $row;
+        }
     }
     
 
-    $order =  "select orderAmmount from orders;";
+    $order =  "select * from orders;";
     $rsOrder = mysqli_query($c,$order);
     
     $oAr = array();
     if (mysqli_num_rows($rsOrder) >0){
         while($row = mysqli_fetch_assoc($rsOrder)){
-            $oAr[] = $row;}
-    }
-
-    //to check if works print_r($oAr);
-    //to check it works 
-    print_r($pAr);
-
-    //comparing
-    echo "result: ";
-     function a($oAr,$pAr){
-        foreach($oAr as $o){
-            foreach($pAr as $p){
-                if ($o['orderAmmount'] === $p['ammount'])
-                    {  //solusi lain?
-                        echo $o['name'];
-                    }else echo "false\n";
-            }
+            $oAr[] = $row;
         }
     }
 
-    a($oAr,$pAr);
-    
+
+    //comparing
+    echo "RESULT: ".'<br>';
+
+       $countO= count($oAr);
+        $countP= count($pAr); 
+
+        echo "data of packs total $countP. ";
+        echo "data of orders total  $countO".'<br>';
+
+      $calc=array();
+      $k=0;
+
+      /*
+      foreach($oAr as $o){
+        foreach($pAr as $p){
+            if ($o['orderAmmount'] < $p['ammount'])
+                {  
+                    echo $o['name'].'<br>';
+                    $calc =$p['ammount'];
+                    echo $calc.'<br>';
+                    break;
+                }else ;
+        }*/
+
+        for ($i=0;$i<$countO;$i++)
+        {
+            for ($j=0;$j<$countP;$j++) 
+            {
+                if($oAr[$i]['orderAmmount']=== $pAr[$j]['ammount'])
+                { 
+                    $oAr[$i]['orderToSend'] = $pAr[$j]['ammount'];
+                    break;                      
+                }
+                
+                else if($oAr[$i]['orderAmmount']<= $pAr[$j]['ammount'])
+                { 
+                    $oAr[$i]['orderToSend'] = $pAr[$j]['ammount'];
+                    break;                      
+                } 
+
+                else if($oAr[$i]['orderAmmount']>= $pAr[$j]['ammount'])
+                {
+                    $k=0;
+                    while ($oAr[$i]['orderToSend']<=$pAr[$j]['ammount']){
+                            $oAr[$i]['orderToSend'] =  $oAr[$i]['orderToSend']+ $pAr[$j+$k]['ammount'] ;
+                            $k++;
+                    }
+                    break;                      
+                } 
         
-   
+            }
+        }
 
-?>
-
-   
+        print_r($oAr);
+    
+?> 
 </html>
