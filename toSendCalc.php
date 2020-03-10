@@ -12,43 +12,44 @@
     $packs =  "select ammount from packs;";
     $rsPacks = mysqli_query($c,$packs);
     
-    $packsArr = array();
+    $pAr = array();
     if (mysqli_num_rows($rsPacks) >0){
         while($row = mysqli_fetch_assoc($rsPacks)){
-            $packsArr[] = $row;}
+            $pAr[] = $row;}
     }
     
-    //to check it works print_r($packsArr);
 
-    $order =  "select  name, orderAmmount from orders;";
+    $order =  "select orderAmmount from orders;";
     $rsOrder = mysqli_query($c,$order);
     
-    $orderArr = array();
+    $oAr = array();
     if (mysqli_num_rows($rsOrder) >0){
         while($row = mysqli_fetch_assoc($rsOrder)){
-            $orderArr[] = $row;}
+            $oAr[] = $row;}
     }
 
-    //to check if works 
-    print_r($orderArr);
+    //to check if works print_r($oAr);
+    //to check it works 
+    print_r($pAr);
 
-    
     //comparing
-    foreach($orderArr as $o){
-      
-            if ($o[orderAmmount] >1000){  //solusi lain?
-                print_r($o);
-             }
-    }    
+    echo "result: ";
+    function a($oAr,$pAr){
+        foreach($oAr as $o){
+            foreach($pAr as $p){
+                if ($o['orderAmmount'] === $p['ammount'])
+        {  //solusi lain?
+            echo "true\n";
+        }else echo "false\n";
+            }
+        }
+    }
 
-//    foreach($orderArr as $o){
-//        foreach($packsArr as $p){
-//            if ($o[orderAmmount] == $p[ammount]){  //solusi lain?
-//                print_r($o);
-//             }
-//        }
-//    }    
-
+    a($oAr,$pAr);
+       
+    
+        
+   
 
 ?>
 
