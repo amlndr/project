@@ -32,59 +32,33 @@
 
 
     //comparing
-    echo "RESULT: ".'<br>';
+    $countO= count($oAr);
+    $countP= count($pAr);
 
-       $countO= count($oAr);
-        $countP= count($pAr); 
-
-        echo "data of packs total $countP. ";
-        echo "data of orders total  $countO".'<br>';
-
-      $calc=array();
-      $k=0;
-
-      /*
-      foreach($oAr as $o){
-        foreach($pAr as $p){
-            if ($o['orderAmmount'] < $p['ammount'])
-                {  
-                    echo $o['name'].'<br>';
-                    $calc =$p['ammount'];
-                    echo $calc.'<br>';
-                    break;
-                }else ;
-        }*/
-
-        for ($i=0;$i<$countO;$i++)
+    for ($i=0;$i<$countO;$i++)
+    {
+        if($oAr[$i]['orderAmmount']< $pAr[0]['ammount'] && $oAr[$i]['orderAmmount'] !=0)
         {
-            for ($j=0;$j<$countP;$j++) 
-            {
-                if($oAr[$i]['orderAmmount']=== $pAr[$j]['ammount'])
-                { 
-                    $oAr[$i]['orderToSend'] = $pAr[$j]['ammount'];
-                    break;                      
-                }
-                
-                else if($oAr[$i]['orderAmmount']<= $pAr[$j]['ammount'])
-                { 
-                    $oAr[$i]['orderToSend'] = $pAr[$j]['ammount'];
-                    break;                      
-                } 
-
-                else if($oAr[$i]['orderAmmount']>= $pAr[$j]['ammount'])
-                {
-                    $k=0;
-                    while ($oAr[$i]['orderToSend']<=$pAr[$j]['ammount']){
-                            $oAr[$i]['orderToSend'] =  $oAr[$i]['orderToSend']+ $pAr[$j+$k]['ammount'] ;
-                            $k++;
-                    }
-                    break;                      
-                } 
-        
-            }
+            $oAr[$i]['orderToSend'] = $oAr[$i]['orderToSend'] + $pAr[0]['ammount'];
         }
 
-        print_r($oAr);
+        for ($j=($countP-1);$j>=0;$j--) 
+        {
+            
+            if ($pAr[$j]['ammount']<=$oAr[$i]['orderAmmount'])
+            {
+                $oAr[$i]['orderToSend'] = $oAr[$i]['orderToSend'] + $pAr[$j]['ammount'];
+                $oAr[$i]['orderAmmount'] =$oAr[$i]['orderAmmount'] - $pAr[$j]['ammount'];
+                if($oAr[$i]['orderAmmount']< $pAr[0]['ammount'] && $oAr[$i]['orderAmmount'] !=0)
+                {
+                    $oAr[$i]['orderToSend'] = $oAr[$i]['orderToSend'] + $pAr[0]['ammount'];
+                }
+                $j++; 
+            }  
+
+        } 
+    }
+    print_r($oAr);
     
 ?> 
 </html>
