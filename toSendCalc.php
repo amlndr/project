@@ -9,7 +9,7 @@
 
     //create array for packs and order
 
-    $packs =  "select ammount from packs;";
+    $packs =  "select ammount from packs order by ammount asc;";
     $rsPacks = mysqli_query($c,$packs);
     
     $pAr = array();
@@ -29,28 +29,13 @@
             $oAr[] = $row;
         }
     }
-/*
-    if (is_array($oAr))
-    {
-            foreach($oAr as $row => $val)
-            {
-                $name = mysqli_real_escape_string($c,$val['name']);
-                $contact = mysqli_real_escape_string($c,$val['contact']);
-                $oA = mysqli_real_escape_string($c,$val['orderAmmount']);
-                $send = mysqli_real_escape_string($c,$val['orderToSend']);
-
-                
-                $qSend = "update orders set orderToSend='$send' where name =$name;";
-                if (mysqli_query($c,$qSend)){
-                    echo "orders successfully updated";
-                }else echo "fail";
-            }
-        
-    }*/
 
     //comparing
     $countO= count($oAr);
     $countP= count($pAr);
+
+
+    
 
     for ($i=0;$i<$countO;$i++)
     {
