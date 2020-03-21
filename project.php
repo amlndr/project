@@ -25,17 +25,6 @@
         }else echo "fail";
     }
 
-    if (isset($_GET['edit'])){
-        $id =$_GET['edit'];
-        $result = $mysqli->query ("select * from packs where id=$id;") or die($mysqli->error());
-
-        if(count($result)==1){
-            $row =$result->fetch_array();
-            $ammount=$row['ammount'];
-        }
-    } 
-
-    $ammount='';
 ?>
 
 <head>
@@ -63,14 +52,53 @@
         </div>
         <div class="input">
             <form method="POST">
-                <input type="text" id="ammount" value="<?php echo $ammount ?>" name="ammount" placeholder="type in new ammount">
+                <input type="text" id="ammount" name="ammount" placeholder="type in new ammount">
                 <button style="border-radius:20px;padding:5px 16px;"type = "submit" name="add">add new</button>
             </form>
         </div>
     </div>
     </div>
+
+    <?php
+    if (isset($_GET['edit'])){
+        $id      = $_GET['edit'];
+        $edit    = "select * from packs where id=$id;";
+        $result  = mysqli_query($c,$edit);
+        $rsCheck = mysqli_num_rows($result);
+                   
+        if($rsCheck==1){
+            $row = mysqli_fetch_assoc($result);
+            $ammount=$row['ammount'];
+            ?>
+
+            <div class="container">
+                <div class="title">
+                    <h1 style="font-size: 20px">update new widget packs here</h1>
+                </div>
+                <div class="input" >
+                     <form method= "POST">
+                        <input type="text" id="ammount" value="<?php echo $ammount; ?>" name="ammount" placeholder="type in new ammount">
+                        <button style="border-radius:20px;padding:5px 16px;"type = "submit" name="update">update</button>
+                    </form>
+                    <?php 
+                        if (isset($_POST['update'])){
+                            $ammount = $_POST['ammount'];
+                            $newDt = "update packs set ammount = '$ammount' where id = $id; ";
+
+                            if (mysqli_query($c,$newDt)){
+                                echo "successfully updated";
+                            }else echo "fail";
+                    }
+                    ?>
+                </div>
+            </div>
+                   <?php 
+                    }
+                } 
+            ?>
+            </div>
     
-    <div class="orderPacks">
+    <div class="orderpacks">
         <h2>your widget packs</h2>
         <table style="margin:2px;">
         <tr>
@@ -93,7 +121,7 @@
             <td>
             
                 
-                <a href="project.php?update=<?php echo $rows['id'];?>" type="submit" style="border-radius:20px;padding:5px 16px;" name="edit">edit</a>
+                <a href="project.php?edit=<?php echo $rows['id'];?>" type="submit" style="border-radius:20px;padding:5px 16px;" name="edit">edit</a>
             
                 <a href="project.php?delete=<?php echo $rows['id']; ?>" type="submit"  name="delete">delete </a>
             </td></tr>
@@ -108,34 +136,8 @@
 
     <div class="orderPacks">
         <h2>orders</h2>
-        <table>
-        <tr>
-            <th>name</th>
-            <th>contact</th>
-            <th>order</th>
-            <th>packs to send</th>
-        </tr>
-        <?php
-            $qOrder="select * from orders;";
-            $result = mysqli_query($c, $qOrder);
-            $resultCheck = mysqli_num_rows($result);
+        <?php include('toSendCalc.php')?>
 
-            if($resultCheck>0){
-
-            while($rows = mysqli_fetch_assoc($result)){
-        ?>
-            <tr>
-                <td><?php echo $rows['name'];?></td>
-                <td><?php echo $rows['contact'];?></td>
-                <td><?php echo $rows['orderAmmount'];?></td>
-                <td><?php echo $rows['orderToSend'];?></td>
-            </tr>
-                <?php
-            }
-             }
-                ?>
-            
-    </table>
     </div>
 
     <div class="devider"></div>
